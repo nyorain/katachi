@@ -45,9 +45,9 @@ struct EndArc {
 };
 
 void flatten(const CubicBezier&, std::vector<Vec2f>&,
-	unsigned maxLevel = 8, float minDist = 0.0001f);
+	unsigned maxLevel = 8, float minDist = 0.001f);
 void flatten(const QuadBezier&, std::vector<Vec2f>&,
-	unsigned maxLevel = 10, float minDist = 0.0001f);
+	unsigned maxLevel = 10, float minDist = 0.001f);
 void flatten(const CenterArc&, std::vector<Vec2f>&, unsigned steps);
 
 CubicBezier quadToCubic(const QuadBezier&);

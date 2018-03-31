@@ -86,10 +86,10 @@ struct FlattenSettings {
 
 	/// The maxLevel params passed to the flatten functions for bezier curves
 	unsigned maxQBezLevel = 8u;
-	float minQBezDist = 0.0001f;
+	float minQBezDist = 0.001f;
 
 	unsigned maxCBezLevel = 10u;
-	float minCBezDist = 0.0001f;
+	float minCBezDist = 0.001f;
 };
 
 /// Flattens the given subpath into a point array.
