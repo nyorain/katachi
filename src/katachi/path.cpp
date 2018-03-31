@@ -30,7 +30,7 @@ Command& Subpath::qBezier(Vec2f to, const QBezierParams& bezier) {
 }
 
 Command& Subpath::sqBezier(Vec2f to) {
-	commands.push_back({to, SCBezierParams {}});
+	commands.push_back({to, SQBezierParams {}});
 	return commands.back();
 }
 
