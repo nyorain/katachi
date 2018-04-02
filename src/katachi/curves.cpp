@@ -88,7 +88,7 @@ void flatten(const CenterArc& arc, std::vector<Vec2f>& points, unsigned steps) {
 	auto r = Vec {std::abs(arc.radius.x), std::abs(arc.radius.y)};
 	for(auto i = 1u; i <= steps; ++i) {
 		auto angle = arc.start + i * (delta / steps);
-		points.push_back(r * unitCirclePoint(angle) * arc.center);
+		points.push_back(r * unitCirclePoint(angle) + arc.center);
 	}
 }
 
