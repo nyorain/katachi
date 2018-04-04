@@ -42,7 +42,7 @@ svg specification.
 - [ ] handle arc axis rotation
 - [ ] unit testing
 - [ ] stroke.hpp: doc, api cleanup, additions (StrokeSettings)
-	- [ ] support for antialiasing data (stroke + fill)
-	- [ ] more advanced color/whatever data support
-	- [ ] lineCap, lineJoin
+	- [x] support for antialiasing data (stroke + fill)
+	- [x] more advanced color/whatever data support
+	- [ ] lineCap, lineJoin (also with anti aliasing)
 	- [ ] better loop handling (loop flag in StrokeSettings?)
