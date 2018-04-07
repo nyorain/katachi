@@ -15,6 +15,8 @@ namespace ktc {
 /// points.
 struct StrokeSettings {
 	float width; /// Width of the stroke (point normal length).
+	bool loop; /// Whether to loop points
+	float capFringe; /// Fringe of caps. Set to 0.f to disable
 };
 
 /// Vertex of a stroke operation.

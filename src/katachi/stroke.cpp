@@ -23,22 +23,52 @@ void bake(Span<const Vec2f> points, const StrokeSettings& settings,
 		return;
 	}
 
-	auto loop = points.front() == points.back();
-	if(loop) {
-		points = points.slice(0, points.size() - 1);
-	}
-
 	auto p0 = points.back();
 	auto p1 = points.front();
 	auto p2 = points[1];
 
-	for(auto i = 0u; i < points.size() + loop; ++i) {
+	// start cap
+	auto start = 0u;
+	auto end = points.size() + settings.loop;
+	auto capFringe = settings.capFringe * 0.5f;
+	if(!settings.loop && capFringe > 0.f) {
+		start = 1u;
+		end = points.size() - 1;
+
+		auto xextrusion = normalized(p2 - p1);
+		auto yextrusion = lnormal(xextrusion);
+		auto c = color.size() > 0 ? color[0] : Vec4u8 {0, 0, 0, 255};
+		handler({
+			p1 - capFringe * xextrusion + width * yextrusion,
+			{0.f, 1.f}, c
+		});
+		handler({
+			p1 - capFringe * xextrusion - width * yextrusion,
+			{0.f, -1.f}, c
+		});
+
+		handler({
+			p1 + capFringe * xextrusion + width * yextrusion,
+			{1.f, 1.f}, c
+		});
+		handler({
+			p1 + capFringe * xextrusion - width * yextrusion,
+			{1.f, -1.f}, c
+		});
+
+		p0 = p1;
+		p1 = p2;
+		p2 = points[2 % points.size()];
+
+	}
+
+	for(auto i = start; i < end; ++i) {
 		auto d0 = lnormal(p1 - p0);
 		auto d1 = lnormal(p2 - p1);
 
-		if(i == 0 && !loop) {
+		if(i == 0 && !settings.loop) {
 			d0 = d1;
-		} else if(i == points.size() - 1 && !loop) {
+		} else if(i == points.size() - 1 && !settings.loop) {
 			d1 = d0;
 		}
 
@@ -54,18 +84,43 @@ void bake(Span<const Vec2f> points, const StrokeSettings& settings,
 		auto extrusion = 0.5f * (normalized(d0) + normalized(d1));
 		handler({
 			p1 + width * extrusion,
-			{0.f, 1.f},
+			{1.f, 1.f},
 			color.size() > i ? color[i] : Vec4u8 {0, 0, 0, 255}
 		});
 		handler({
 			p1 - width * extrusion,
-			{0.f, -1.f},
+			{1.f, -1.f},
 			color.size() > i ? color[i] : Vec4u8 {0, 0, 0, 255}
 		});
 
 		p0 = points[(i + 0) % points.size()];
 		p1 = points[(i + 1) % points.size()];
 		p2 = points[(i + 2) % points.size()];
+	}
+
+	// end cap
+	if(!settings.loop && settings.capFringe > 0.f) {
+		auto i = points.size() - 1;
+		auto c = color.size() > i ? color[i] : Vec4u8 {0, 0, 0, 255};
+		auto xextrusion = normalized(p1 - p0);
+		auto yextrusion = lnormal(xextrusion);
+		handler({
+			p1 - capFringe * xextrusion + width * yextrusion,
+			{1.f, 1.f}, c
+		});
+		handler({
+			p1 - capFringe * xextrusion - width * yextrusion,
+			{1.f, -1.f}, c
+		});
+
+		handler({
+			p1 + capFringe * xextrusion + width * yextrusion,
+			{0.f, 1.f}, c
+		});
+		handler({
+			p1 + capFringe * xextrusion - width * yextrusion,
+			{0.f, -1.f}, c
+		});
 	}
 }
 
@@ -81,6 +136,7 @@ void bakeAA(Span<const Vec2f> points, Span<const Vec4u8> color,
 		return;
 	}
 
+	fringe *= 0.5f;
 	auto loop = points.front() == points.back();
 	if(loop) {
 		points = points.slice(0, points.size() - 1);
@@ -113,20 +169,20 @@ void bakeAA(Span<const Vec2f> points, Span<const Vec4u8> color,
 		auto extrusion = 0.5f * (normalized(d0) + normalized(d1));
 		fill({
 			p1 + fringe * extrusion,
-			{0.f, 0.f},
+			{1.f, 0.f},
 			color.size() > i ? color[i] : Vec4u8 {0, 0, 0, 255}
 		});
 
 		// stroke
 		stroke({
 			p1 + fringe * extrusion,
-			{0.f, 0.f},
+			{1.f, 0.f},
 			color.size() > i ? color[i] : Vec4u8 {0, 0, 0, 255}
 		});
 
 		stroke({
 			p1 - fringe * extrusion,
-			{0.f, -1.f},
+			{1.f, 1.f},
 			color.size() > i ? color[i] : Vec4u8 {0, 0, 0, 255}
 		});
 
