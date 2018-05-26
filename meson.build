@@ -1,5 +1,5 @@
 project('katachi', ['cpp'],
-	license: 'MIT',
+	license: 'BSL-1.0',
 	version: '0.1.0',
 	meson_version: '>=0.43',
 	default_options: [
@@ -19,9 +19,6 @@ warnings = [
 	'-Wundef',
 	'-Wcast-align=strict',
 	'-Wlogical-op',
-
-	# disable some
-	# '-Wno-non-virtual-dtor',
 ]
 
 # default arguments
@@ -36,9 +33,15 @@ dlg_path_arg = '-DDLG_BASE_PATH="' + '/'.join(source_root) + '/"'
 add_project_arguments(dlg_path_arg, language: 'cpp')
 add_project_arguments('-DDLG_DEFAULT_TAGS="katachi",', language: 'cpp')
 
-dep_nytl = dependency('nytl MASTER', fallback: ['nytl', 'nytl_dep'])
-dep_dlg = dependency('dlg', fallback: ['dlg', 'dlg_dep'])
+dep_nytl = dependency('nytl',
+	version: '>=0.6.0',
+	fallback: ['nytl', 'nytl_dep'])
 
+dep_dlg = dependency('dlg',
+	version: '>=0.2.2',
+	fallback: ['dlg', 'dlg_dep'])
+
+# build
 katachi_inc = include_directories('include')
 katachi_deps = [
   dep_nytl,
@@ -62,11 +65,23 @@ katachi_dep = declare_dependency(
 	dependencies: [dep_nytl],
 	include_directories: katachi_inc)
 
+# tests
 if get_option('tests')
-  bugged_dep = dependency('bugged', fallback: ['bugged', 'bugged_dep'])
-  test_deps = [bugged_dep, katachi_dep]
+  dep_bugged = dependency('bugged', fallback: ['bugged', 'bugged_dep'])
+  test_deps = [dep_bugged, dep_dlg, katachi_dep]
 
   test_svg = executable('test_svg', 'docs/tests/svg.cpp',
 	  dependencies: test_deps)
   test('test_svg', test_svg)
 endif
+
+# pkgconfig
+pkg = import('pkgconfig')
+pkg_dirs = ['.', 'katachi']
+pkg.generate(
+	name: 'katachi',
+	filebase: 'katachi',
+	requires: ['nytl'],
+	subdirs: pkg_dirs,
+	version: meson.project_version(),
+	description: 'Curve and path baking')
