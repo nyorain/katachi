@@ -139,7 +139,7 @@ void bakeAA(Span<const Vec2f> points, Span<const Vec4u8> color,
 	fringe *= 0.5f;
 	auto loop = points.front() == points.back();
 	if(loop) {
-		points = points.slice(0, points.size() - 1);
+		points = points.first(points.size() - 1);
 	}
 
 	auto p0 = points.back();
