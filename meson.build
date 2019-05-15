@@ -1,7 +1,7 @@
 project('katachi', ['cpp'],
 	license: 'BSL-1.0',
 	version: '0.1.0',
-	meson_version: '>=0.43',
+	meson_version: '>=0.46',
 	default_options: [
 		'cpp_std=c++1z',
   		'warning_level=3',
@@ -79,6 +79,7 @@ endif
 pkg = import('pkgconfig')
 pkg_dirs = ['.', 'katachi']
 pkg.generate(
+	katachi_lib,
 	name: 'katachi',
 	filebase: 'katachi',
 	requires: ['nytl'],
