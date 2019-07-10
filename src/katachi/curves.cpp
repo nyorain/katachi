@@ -22,12 +22,12 @@ Vec2f unitCirclePoint(float angle) {
 	return {std::cos(angle), std::sin(angle)};
 }
 
-/// Simple Paul de Casteljau implementation.
+/// Simple de Casteljau implementation.
 /// See antigrain.com/research/adaptive_bezier/
 void subdivide(const CubicBezier& bezier, unsigned maxlvl, unsigned lvl,
 		std::vector<nytl::Vec2f>& points, float minSubdiv) {
 
-	if (lvl > maxlvl) {
+	if(lvl > maxlvl) {
 		return;
 	}
 
@@ -35,11 +35,6 @@ void subdivide(const CubicBezier& bezier, unsigned maxlvl, unsigned lvl,
 	auto p2 = bezier.control1;
 	auto p3 = bezier.control2;
 	auto p4 = bezier.end;
-
-	auto p12 = 0.5f * (p1 + p2);
-	auto p23 = 0.5f * (p2 + p3);
-	auto p34 = 0.5f * (p3 + p4);
-	auto p123 = 0.5f * (p12 + p23);
 
 	auto d = p4 - p1;
 	auto d2 = std::abs(cross(p2 - p4, d));
@@ -49,6 +44,11 @@ void subdivide(const CubicBezier& bezier, unsigned maxlvl, unsigned lvl,
 		points.push_back(p4);
 		return;
 	}
+
+	auto p12 = 0.5f * (p1 + p2);
+	auto p23 = 0.5f * (p2 + p3);
+	auto p34 = 0.5f * (p3 + p4);
+	auto p123 = 0.5f * (p12 + p23);
 
 	auto p234 = 0.5f * (p23 + p34);
 	auto p1234 = 0.5f * (p123 + p234);
