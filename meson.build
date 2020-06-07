@@ -3,15 +3,10 @@ project('katachi', ['cpp'],
 	version: '0.1.0',
 	meson_version: '>=0.46',
 	default_options: [
-		'cpp_std=c++1z',
-  		'warning_level=3',
-  		'werror=true'])
+		'cpp_std=c++17',
+  		'warning_level=3'])
 
 warnings = [
-	'-Wall',
-	'-Wextra',
-	'-Wpedantic',
-
 	# extra
 	'-Wduplicated-cond',
 	'-Wrestrict',
