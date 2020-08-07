@@ -26,7 +26,7 @@ add_project_arguments(
 source_root = meson.current_source_dir().split('\\')
 dlg_path_arg = '-DDLG_BASE_PATH="' + '/'.join(source_root) + '/"'
 add_project_arguments(dlg_path_arg, language: 'cpp')
-add_project_arguments('-DDLG_DEFAULT_TAGS="katachi",', language: 'cpp')
+add_project_arguments('-DDLG_DEFAULT_TAGS="katachi"', language: 'cpp')
 
 dep_nytl = dependency('nytl',
 	version: '>=0.6.0',
